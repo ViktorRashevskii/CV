@@ -1,4 +1,4 @@
-.webp<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
@@ -99,7 +99,9 @@
 
                     <img src="images/15.webp" alt="Voice Assistant">
                     <img src="images/16.webp" alt="Voice Assistant GIF">
-                    <img src="images/17.gif" alt="Voice Assistant GIF">
+                    <video muted autoplay loop playsinline>
+                        <source src="images/17.webm" type="video/webm">
+                    </video>
                     <img src="images/19.webp" alt="Voice Assistant">
 
                 </div>
@@ -137,9 +139,15 @@
 
                 <div class="project-media gallery">
 
-                    <img src="images/4.gif" alt="">
-                    <img src="images/5.gif" alt="">
-                    <img src="images/6.gif" alt="">
+                                        <video muted autoplay loop playsinline>
+                        <source src="images/4.webm" type="video/webm">
+                    </video>
+                                        <video muted autoplay loop playsinline>
+                        <source src="images/5.webm" type="video/webm">
+                    </video>
+                                        <video muted autoplay loop playsinline>
+                        <source src="images/6.webm" type="video/webm">
+                    </video>
 
                 </div>
 
@@ -175,7 +183,9 @@
 
                     <img src="images/10.webp" alt="">
                     <img src="images/11.webp" alt="">
-                    <img src="images/18.gif" alt="">
+                                        <video muted autoplay loop playsinline>
+                        <source src="images/18.webm" type="video/webm">
+                    </video>
 
                 </div>
 
@@ -285,7 +295,7 @@
 
         <span class="arrow arrow-left">&#10094;</span>
 
-        <img class="lightbox-image" id="lightbox-image">
+        <div class="lightbox-content" id="lightbox-content"></div>
 
         <span class="arrow arrow-right">&#10095;</span>
 
@@ -293,33 +303,69 @@
 
     <script>
 
-        const images = document.querySelectorAll('.gallery img');
+        const galleryItems = document.querySelectorAll('.gallery img, .gallery video');
 
         const lightbox = document.getElementById('lightbox');
 
-        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxContent = document.getElementById('lightbox-content');
 
         const closeBtn = document.querySelector('.lightbox-close');
 
         let currentIndex = 0;
 
-        const imageArray = Array.from(images);
+        const mediaArray = Array.from(galleryItems);
 
-        function showImage(index) {
+        function showMedia(index) {
 
             currentIndex = index;
 
-            lightboxImage.src = imageArray[currentIndex].src;
+            const currentItem = mediaArray[currentIndex];
+
+            lightboxContent.innerHTML = '';
+
+            // IMAGE
+            if (currentItem.tagName === 'IMG') {
+
+                const img = document.createElement('img');
+
+                img.src = currentItem.src;
+
+                img.className = 'lightbox-image';
+
+                lightboxContent.appendChild(img);
+
+            }
+
+            // VIDEO
+            if (currentItem.tagName === 'VIDEO') {
+
+                const video = document.createElement('video');
+
+                video.src = currentItem.querySelector('source').src;
+
+                video.className = 'lightbox-video';
+
+                video.autoplay = true;
+
+                video.loop = true;
+
+                video.controls = true;
+
+                video.playsInline = true;
+
+                lightboxContent.appendChild(video);
+
+            }
 
         }
 
-        images.forEach((image, index) => {
+        galleryItems.forEach((item, index) => {
 
-            image.addEventListener('click', () => {
+            item.addEventListener('click', () => {
 
                 lightbox.classList.add('active');
 
-                showImage(index);
+                showMedia(index);
 
             });
 
@@ -329,63 +375,69 @@
 
             lightbox.classList.remove('active');
 
+            lightboxContent.innerHTML = '';
+
         });
 
         lightbox.addEventListener('click', (e) => {
 
-            if (e.target !== lightboxImage &&
-                !e.target.classList.contains('arrow')) {
-
-                lightbox.classList.remove('active');
-
+            if (
+                e.target === lightbox ||
+                e.target.classList.contains('arrow')
+            ) {
+                return;
             }
 
         });
 
-        function nextImage() {
+        function nextMedia() {
 
             currentIndex++;
 
-            if (currentIndex >= imageArray.length) {
+            if (currentIndex >= mediaArray.length) {
                 currentIndex = 0;
             }
 
-            showImage(currentIndex);
+            showMedia(currentIndex);
 
         }
 
-        function prevImage() {
+        function prevMedia() {
 
             currentIndex--;
 
             if (currentIndex < 0) {
-                currentIndex = imageArray.length - 1;
+                currentIndex = mediaArray.length - 1;
             }
 
-            showImage(currentIndex);
+            showMedia(currentIndex);
 
         }
 
         document.querySelector('.arrow-right')
-            .addEventListener('click', nextImage);
+            .addEventListener('click', nextMedia);
 
         document.querySelector('.arrow-left')
-            .addEventListener('click', prevImage);
+            .addEventListener('click', prevMedia);
 
         document.addEventListener('keydown', (e) => {
 
             if (!lightbox.classList.contains('active')) return;
 
             if (e.key === 'ArrowRight') {
-                nextImage();
+                nextMedia();
             }
 
             if (e.key === 'ArrowLeft') {
-                prevImage();
+                prevMedia();
             }
 
             if (e.key === 'Escape') {
+
                 lightbox.classList.remove('active');
+
+                lightboxContent.innerHTML = '';
+
             }
 
         });

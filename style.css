@@ -21,7 +21,7 @@ body {
 
     background:
         linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0)),
-        url("images/header.png");
+        url("images/header.webp");
 
     background-position: center bottom;
     background-repeat: no-repeat;
@@ -217,6 +217,15 @@ body {
 }
 
 .lightbox-image {
+    max-width: 90%;
+    max-height: 90%;
+
+    border-radius: 12px;
+
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-video {
     max-width: 90%;
     max-height: 90%;
 
